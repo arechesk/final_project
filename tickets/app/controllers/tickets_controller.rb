@@ -26,7 +26,7 @@ class TicketsController < ApplicationController
   end
 
   def update
-    ticket = Ticket.find(ticket_params[:id])
+    ticket = Ticket.find(params[:id])
     if ticket.update(ticket_params)
       render json: { result: true, message: "Ticket successfully updated" }, status: 200
     else
