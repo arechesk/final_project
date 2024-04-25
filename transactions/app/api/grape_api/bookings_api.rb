@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'redis'
+require 'net/http'
 class GrapeApi
   class BookingsApi < Grape::API
     format :json
@@ -20,17 +21,19 @@ class GrapeApi
         present JSON.parse(result_json)
       end
       params do
-        requires :type, type: String
+        requires :category, type: String
         requires :date, type: Date
       end
       desc 'Создание новой брони'
       post do
         # TODO: изменить направление в update booking
-        # TODO GET /tickets/check_availability
-        uri = URI('http://tickets:3000/check_availability')
-        params = { type: params[:type], date: params[:date] }
-        response = Net::HTTP.get(uri, params)
-        response = { result: true, ticket_id: rand(1..1000), cost: rand(1000..2000) }
+        # TODO GET /tickets/
+        
+        client = HTTPClient.new
+        url="http://192.168.1.37:3000/tickets/check_availability?category=#{params[:category]}&date=#{params[:date].strftime("%d.%m.%Y")}"
+        resp=JSON.parse(client.get(url).body)
+        error!({ result: false, message: 'ticket not found' }, 404) unless resp["result"]
+        response = { result: true, ticket_id: resp["ticket_id"], cost: resp["cost"] }
         redis = Redis.new(url: ENV['REDIS_URL'])
         booking_id = redis.incr('counter')+rand(3000..4000)
         booking = { ticket_id: response[:ticket_id], price: response[:cost] }
