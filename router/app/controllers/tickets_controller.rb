@@ -1,10 +1,14 @@
 require 'net/http'
-
+require "json"
+require "open-uri"
 class TicketsController < ApplicationController
   def index
-    uri = URI('http://service.com/tickets')
-    response = Net::HTTP.get(uri)
-    render json: JSON.parse(response)
+    url = "http://app-tickets:8080/tickets"
+    data = URI.open(url).read
+    render json: JSON.parse(data)
+    # uri = URI('http://app-tickets:8080/tickets')
+    # response = Net::HTTP.get(uri)
+    # render json: JSON.parse(response)
  end
 
  def update
