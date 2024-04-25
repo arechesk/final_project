@@ -29,7 +29,7 @@ class GrapeApi
         # TODO GET /tickets/
 
         client = HTTPClient.new
-        url="http://192.168.1.37:3000/tickets/check_availability?category=#{params[:category]}&date=#{params[:date].strftime("%d.%m.%Y")}"
+        url="http://tickets:3000/tickets/check_availability?category=#{params[:category]}&date=#{params[:date].strftime("%d.%m.%Y")}"
         resp=JSON.parse(client.get(url).body)
         error!({ result: false, message: 'ticket not found' }, 404) unless resp["result"]
         response = { result: true, ticket_id: resp["ticket_id"], cost: resp["cost"] }
