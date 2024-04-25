@@ -45,6 +45,9 @@ class GrapeApi
                          doc_type: params[:doc_type],
                          doc_number: params[:doc_number])
         # TODO: change ticket status
+        uri = URI('http://tickets:3000/tickets/#{ticket_id}')
+        params = { status: "purchased" }
+        response = Net::HTTP::Patch.new(uri, params)
         redis.del("booking_#{params[:booking_id]}")
         # byebug
         present "{'result': true, 'message': 'purchase successful', 'ticket_id': #{ticket_id}"

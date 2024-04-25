@@ -27,6 +27,9 @@ class GrapeApi
       post do
         # TODO: изменить направление в update booking
         # TODO GET /tickets/check_availability
+        uri = URI('http://tickets:3000/check_availability')
+        params = { type: params[:type], date: params[:date] }
+        response = Net::HTTP.get(uri, params)
         response = { result: true, ticket_id: rand(1..1000), cost: rand(1000..2000) }
         redis = Redis.new(url: ENV['REDIS_URL'])
         booking_id = redis.incr('counter')+rand(3000..4000)
