@@ -45,9 +45,9 @@ class GrapeApi
                          doc_type: params[:doc_type],
                          doc_number: params[:doc_number])
         # TODO: change ticket status
-        byebug
+
         client = HTTPClient.new
-        url = "http://tickets:3000/tickets/#{ticket_id}"
+        url = "http://app-tickets:8080/tickets/#{ticket_id}"
         body = { status: "purchased" }
         response=client.patch(url,body.to_json,'Content-Type'=>'application/json')
         redis.del("booking_#{params[:booking_id]}")
