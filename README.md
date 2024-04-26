@@ -33,11 +33,8 @@ rails db:seed
 |--|--|--|--|
 |tickets|index|GET /tickets|[{id: 1, price:....}, {},...]|
 |tickets|update|PATCH /tickets/:id/block params(status: blocked)|{result: true, mesage: “ successfully blocked”}|
-|tickets|update|PATCH /tickets/:id/book params(status: booked)|{result: true, mesage: “ successfully booked”}|
-|tickets|update|PATCH /tickets/:id/unbook params(status: active)|{result: true, mesage: “ successfully unbooked”}|
 |tickets|show|GET tickets/:id|{id: 1, price:....}|
 |tickets|update|PATCH /tickets/:id/purchase params(status: purchased)|{result: true, mesage: “ successfully purchased”}|
-|tickets|recalculate_price|GET /tickets/recalculate params(type: vip)|{result: true, mesage: “ prices recalculated”}|
 
 |Компонент|**Метод**|**Описание**|**Пример запроса**|**Пример ответа**|
 |--|--|--|--|--|
