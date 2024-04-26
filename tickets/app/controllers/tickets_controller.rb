@@ -26,7 +26,7 @@ class TicketsController < ApplicationController
   def cost
     ticket = Ticket.find_by(date: params[:date], category: params[:category])
     if ticket
-      cost = calculate_cost(ticket.category)
+      cost = TicketCostService.calculate_cost(ticket.category)
       render json: {cost: cost}, status: 200
     else
       render json: {message: "No tickets found for these parameters"}, status: 404
