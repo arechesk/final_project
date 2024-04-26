@@ -17,16 +17,16 @@ class TicketsController < ApplicationController
   end
 
   def show
-    ticket = Ticket.find(params[:id])
-    if ticket
-      render json: {ticket: ticket}, status: 200
-    else
-      render json: {message: "No tickets found for these parameters"}, status: 404
+    begin
+      ticket = Ticket.find(params[:id])
+      render json: { ticket: ticket }, status: :ok
+    rescue ActiveRecord::RecordNotFound
+      render json: { error: "Ticket not found" }
     end
   end
 
   def update
-    ticket = Ticket.find(ticket_params[:id])
+    ticket = Ticket.find(params[:id])
     if ticket.update(ticket_params)
       render json: { result: true, message: "Ticket successfully updated" }, status: 200
     else
@@ -68,12 +68,21 @@ class TicketsController < ApplicationController
   end
 
   def check_availability
-    ticket = Ticket.find_by(date: params[:date], category: params[:category])
+    client = HTTPClient
+    url="http://transaction:3001/bookings"
+    response=JSON.parse(client.get(url).body)
+    booked=[]
+    response.each {|booking| booked<<booking["ticket_id"]}
+    tickets=Ticket.where(date: params[:date], category: params[:category],status: "available")
+    tickets=tickets.where.not(id: booked)
+
+    ticket = tickets.find_by(date: params[:date], category: params[:category])
+
     if ticket
       cost = calculate_cost(ticket.category)
       render json: {result: true, ticket_id: ticket.id, cost: cost}, status: 200
     else
-      render json: {result: false, message: "No tickets found for these parameters"}, status: 404
+      render json: {result: false, message: "No tickets found for these parameters", what_the_hack: tickets}
     end
     # {result: true, ticket_id: id cost: 1500}
     # {result: false}
