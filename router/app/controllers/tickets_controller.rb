@@ -7,7 +7,7 @@ class TicketsController < ApplicationController
   def index
     url = "http://app-tickets:8080/tickets"
     data = URI.open(url).read
-    render json: {"wee" => JSON.parse(data)}
+    render json: JSON.parse(data)
   end
 
   def update
@@ -30,7 +30,7 @@ class TicketsController < ApplicationController
   def show
     url = "http://app-tickets:8080/tickets/#{params[:id]}"
     data = URI.open(url).read
-    render json: {"wee" => JSON.parse(data)}
+    render json: JSON.parse(data)
   end
 
   def cost
