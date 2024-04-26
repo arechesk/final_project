@@ -39,6 +39,12 @@ class TicketsController < ApplicationController
     render json: JSON.parse(data)
   end
 
+  def check_availability
+    url = "http://app-tickets:8080/tickets/check_availability?date=#{params[:date]}&category=#{params[:category]}"
+    data = URI.open(url).read
+    render json: JSON.parse(data)
+  end
+
   private
 
   def ticket_params

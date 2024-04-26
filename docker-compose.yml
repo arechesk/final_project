@@ -16,6 +16,7 @@ services:
       POSTGRES_PASSWORD: password
     volumes:
       - postgres:/var/lib/postgresql/data
+
   app-router:
     build: ./router
     # command: rails s -b 0.0.0.0
@@ -25,5 +26,22 @@ services:
       - app-tickets
     ports:
       - 3000:3000
+
+  transaction:
+    build: ./transactions
+    #volumes:
+     # - .:/usr/src
+    ports:
+      - 3001:3001
+    depends_on:
+      - redis
+    environment:
+      REDIS_URL: redis://redis:6379/0
+  redis:
+    image: redis:alpine
+    volumes:
+      - redis:/data
+      
 volumes:
+  redis:
   postgres:
