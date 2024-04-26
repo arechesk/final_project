@@ -68,7 +68,15 @@ class TicketsController < ApplicationController
   end
 
   def check_availability
-    ticket = Ticket.find_by(date: params[:date], category: params[:category])
+    client = HTTPClient
+    url="http://transaction:3000/bookings"
+    response=JSON.parse(client.get(url).body)
+    bookinged=[]
+    response.each {|booking| bookinged<<booking["ticket_id"]}
+    tickets=Ticket.where(date: params[:date], category: params[:category],status: "available")
+    tickets=tickets.where.not(id: bookinged)
+
+    ticket = tickets.find_by(date: params[:date], category: params[:category])
     if ticket
       cost = calculate_cost(ticket.category)
       render json: {result: true, ticket_id: ticket.id, cost: cost}, status: 200
